@@ -30,6 +30,7 @@ module VCAP::HttpBackend
     end
 
     def start
+      logger.info("Starting agent for #{name}.")
       @keep_checking = true
       check
       NATS.subscribe('router.start') do
@@ -40,7 +41,7 @@ module VCAP::HttpBackend
     end
 
     def stop
-      logger.debug("Stopping agent ...")
+      logger.info("Stopping agent for #{name}.")
       @keep_checking = false
       if @next_timer
         EM.cancel_timer(@next_timer)
