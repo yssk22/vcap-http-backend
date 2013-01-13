@@ -1,8 +1,13 @@
 require 'open3'
+require 'yajl'
+require 'vcap/common'
 
 module VCAP::HttpBackend
   class Agent
-    attr_reader :name, :pid_filename, :auto_start, :start_command, :stop_on_exit, :stop_command
+    attr_reader :name, :domain, :host, :port,
+                :monitor_interval, :listen_delay,
+                :pid_filename, :auto_start, :start_command, :stop_on_exit, :stop_command
+
     def initialize(config)
       @monitor_interval = config["monitor_interval"] || 30
       @listen_delay     = config["listen_delay"] || 30
@@ -66,7 +71,6 @@ module VCAP::HttpBackend
     end
 
     def stop
-      # TODO
     end
 
     protected

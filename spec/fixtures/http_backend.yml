@@ -1,0 +1,28 @@
+---
+local_route: 127.0.0.1
+pid_filename: /tmp/http_backend.pid
+nats_uri: nats://localhost:4222/
+
+logging:
+  level: debug
+
+# Global Configuration for each backend servers
+monitor_interval: 5
+auto_start: true    # start the backend when it is down.
+listen_delay: 2
+stop_on_exit: true  # stop the backend when http_backend stops.
+#
+# Backend HTTP servers to be registered.
+#
+backend_servers:
+  - name: "nats-5000"
+    domain: "foo.vcap.me"
+    port: 5000
+    pid_filename: /tmp/nats-5000.pid
+    start: "nats-server -d -p 5000 --pid /tmp/nats-5000.pid -l /tmp/nats-5000.log"
+    stop:  "kill $(cat /tmp/nats-5000.pid)"
+
+status:
+  port: 34501
+  user: thin
+  password: thin
