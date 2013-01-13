@@ -26,7 +26,7 @@ module VCAP::HttpBackend
       @keep_checking = false
       @last_check    = nil
       @next_timer    = nil
-      @register_msg  = Yajl::Encoder.encode({:host => @host, :port => @port, :uri => @domain, :tags => {:component => "HttpBackend-#{name}"} })
+      @register_msg  = Yajl::Encoder.encode({:host => @host, :port => @port, :uris => [@domain], :tags => {:component => "HttpBackend-#{name}"} })
     end
 
     def start
@@ -80,6 +80,7 @@ module VCAP::HttpBackend
       @checking = true
       unless process_exists?
         if @is_backend_alive # status changed
+          logger.info("Backend '#{name}' is not alive. Unregister it with routers...")
           NATS.publish('router.unregister', @register_msg)
         end
         @is_backend_alive = false
@@ -96,7 +97,8 @@ module VCAP::HttpBackend
         end
       else
         unless @is_backend_alive # status changed
-          NATS.publish('router.unregister', @register_msg)
+          logger.info("Backend '#{name}' is now alive. Register it with routers...")
+          NATS.publish('router.register', @register_msg)
         end
         @is_backend_alive = true
       end
