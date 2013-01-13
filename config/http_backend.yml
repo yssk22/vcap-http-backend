@@ -1,0 +1,33 @@
+---
+local_route: 127.0.0.1
+pid_filename: /tmp/http_backend.pid
+nats_uri: nats://localhost:4222/
+
+logging:
+  level: debug
+
+# Global Configuration for each backend servers
+monitor_interval: 30 # seconds for monitoring interval
+auto_start: false    # start the backend when it is down.
+listen_delay: 5      # seconds to wait for registering after start
+stop_on_exit: false  # stop the backend when http_backend stops.
+#
+# Backend HTTP servers to be registered.
+#
+#backend_servers:
+#  - name: httpd
+#    domain: "foo.vcap.me"
+#    port: 8080
+#    # monitor process and keep the service up.
+#    pid_filename: /var/run/httpd.pid
+#    start: "/usr/bin/service http start"
+#    stop:  "/usr/bin/service http stop"
+#    monitor_interval: 30    # override global
+#    listen_delay: 5         # override global
+#    auto_start: false       # override global
+#    stop_on_exit: fasle
+
+status:
+  port: 34501
+  user: thin
+  password: thin
