@@ -56,6 +56,8 @@ module VCAP::HttpBackend
           @is_backend_alive = false
         end
       end
+      # whether the backend is alive or not, we should unregister from router to recover routing table.
+      NATS.publish('router.unregister', @register_msg)
     end
 
     def is_backend_alive?
