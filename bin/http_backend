@@ -12,4 +12,8 @@ require "rubygems"
 require "bundler/setup"
 
 require "http_backend"
-VCAP::HttpBackend::HttpBackend.new(ARGV).start
+
+http_backend = VCAP::HttpBackend::HttpBackend.new(ARGV)
+['TERM', 'INT', 'QUIT'].each { |s| trap(s) { http_backend.stop } }
+http_backend.start
+
