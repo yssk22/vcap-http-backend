@@ -42,6 +42,9 @@ module VCAP::HttpBackend
 
     def stop
       logger.info("shutting down...")
+      @backends.each do |agent|
+        agent.stop
+      end
       NATS.stop { EM.stop }
       logger.info("bye.")
     end
